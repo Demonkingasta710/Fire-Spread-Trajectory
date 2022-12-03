@@ -11,20 +11,33 @@ coordinateGrid[0][0] = (latFt, lonFt)
 lat = 0
 lon = 0
 inc = 0
+gridCounter = 0
+latCounter = 0
+lonCounter = 0
 while coordinateGrid[3][3] == 16:
-    while lat < 5:
+    wlat = lat
+    while latCounter < 5:
         coordinateGrid[lat][lon] = (latFt+inc, lonFt)
         coordinatePairs = coordinateGrid[lat][lon]
         (latitude, longitude) = coordinatePairs
         latfttoCoord = latitude/3280.34/111.1111111111111
         lonfttoCoord = longitude/3280.34/111.1111111111111
         osm(latfttoCoord, lonfttoCoord)
-        lat = lat+1
+        wlat = wlat+1
+        coordinateGrid[lat][lon] = (latFt, lonFt-inc)
+        coordinatePairs = coordinateGrid[lat][lon]
+        (latitude, longitude) = coordinatePairs
+        latfttoCoord = latitude/3280.34/(10,000/90)
+        lonfttoCoord = longitude/3280.34/(10,000/90)
+        osm(latfttoCoord, lonfttoCoord)
+        lon = lon+1
         inc = inc+100
+        latCounter += 1
+        if latCounter == 5:
+            break;
 
-    lat = 0
     #infinite loop as lat and lon keep being set to 0 everytime while runs again. Need to fix
-    while lon < 5:
+    while lonCounter < 5:
         coordinateGrid[lat][lon] = (latFt, lonFt-inc)
         coordinatePairs = coordinateGrid[lat][lon]
         (latitude, longitude) = coordinatePairs
@@ -34,6 +47,14 @@ while coordinateGrid[3][3] == 16:
         lon = lon+1
         inc = inc+100
         
-    lon = 0
+    if lonCounter == 5:
+        lon = 0
+        lat +=1
+        lonCounter = 0
+    gridCounter += 1
+    if (gridCounter == 15):
+        break
+
+        
 
         
